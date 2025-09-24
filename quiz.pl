@@ -27,12 +27,30 @@ opcao(4, c, 'Manteria distancia, analisando o ponto fraco antes de atacar.').
 opcao(4, d, 'Me esgueiraria e atacaria no ponto vital sem ser notado.').
 
 % Predicado principal que inicia o quiz.
-% Para executar, voce consultara este arquivo e chamara "iniciar_quiz."
+% Predicado principal que inicia o quiz.
 iniciar_quiz :-
-    apresentar_pergunta(1),
+    % O predicado fazer_perguntas/4 eh o coracao do nosso quiz.
+    % Formato: fazer_perguntas(ID_Inicial, ID_Final, AcumuladorDeRespostas, VariavelDeResultado).
+    fazer_perguntas(1, 4, [], ListaDeRespostasFinal),
+    writeln('--- Quiz Finalizado! ---'),
+    write('Respostas coletadas em ordem: '),
+    writeln(ListaDeRespostasFinal).
+
+% Predicado recursivo que executa o quiz.
+% CASO BASE: A recursao para quando o ID atual eh maior que o ID final.
+fazer_perguntas(ID_Atual, ID_Final, RespostasAcumuladas, ListaDeRespostasFinal) :-
+    ID_Atual > ID_Final,
+    !, % O "cut" (!) impede que o Prolog tente outras regras desnecessariamente.
+    reverse(RespostasAcumuladas, ListaDeRespostasFinal). % Inverte a lista para a ordem correta.
+
+% PASSO RECURSIVO: Executa para cada pergunta.
+fazer_perguntas(ID_Atual, ID_Final, RespostasAcumuladas, ListaDeRespostasFinal) :-
+    apresentar_pergunta(ID_Atual),
     write('Sua resposta: '),
     read(Resposta),
-    format('Voce respondeu: ~w~n', [Resposta]).
+    ProximoID is ID_Atual + 1,
+    % Chama a si mesmo para a proxima pergunta, adicionando a resposta atual na "cabeca" da lista.
+    fazer_perguntas(ProximoID, ID_Final, [Resposta | RespostasAcumuladas], ListaDeRespostasFinal).
 
 % Predicado auxiliar que, dado um ID, mostra a pergunta e suas opcoes.
 apresentar_pergunta(ID) :-
