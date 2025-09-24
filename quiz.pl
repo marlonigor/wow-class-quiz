@@ -3,12 +3,28 @@
 % Fatos para as perguntas e suas respectivas opções.
 % Formato: pergunta(ID, TextoDaPergunta).
 pergunta(1, 'Num grupo de aventura, qual seria sua funcao ideal?').
-
-% Formato: opcao(ID_da_Pergunta, Letra, TextoDaOpcao).
 opcao(1, a, 'Liderar e encarar os inimigos de frente.').
 opcao(1, b, 'Usar inteligencia e magia pra controlar a luta.').
 opcao(1, c, 'Atacar de longe, sempre calculando cada disparo.').
 opcao(1, d, 'Agir nas sombras, pegando o inimigo desprevenido.').
+
+pergunta(2, 'Qual dessas armas/poderes te atrai mais?').
+opcao(2, a, 'Espadas e machados pesados.').
+opcao(2, b, 'Feiticos de fogo, gelo ou arcano.').
+opcao(2, c, 'Arco, besta ou um animal companheiro.').
+opcao(2, d, 'Adagas rapidas e veneno mortal.').
+
+pergunta(3, 'Qual dessas frases combina mais com voce?').
+opcao(3, a, 'Nada de enrolacao, eu vou na frente!').
+opcao(3, b, 'Conhecimento eh poder.').
+opcao(3, c, 'Paciencia e precisao sempre vencem.').
+opcao(3, d, 'Ninguem me ve chegando ate ser tarde demais.').
+
+pergunta(4, 'Se voce fosse enfrentar um monstro gigantesco, como faria?').
+opcao(4, a, 'Avançaria de peito aberto e atacaria sem medo.').
+opcao(4, b, 'Lancaria magias poderosas pra controlar ou destruir.').
+opcao(4, c, 'Manteria distancia, analisando o ponto fraco antes de atacar.').
+opcao(4, d, 'Me esgueiraria e atacaria no ponto vital sem ser notado.').
 
 % Predicado principal que inicia o quiz.
 % Para executar, voce consultara este arquivo e chamara "iniciar_quiz."
