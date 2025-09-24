@@ -33,8 +33,8 @@ iniciar_quiz :-
     % Formato: fazer_perguntas(ID_Inicial, ID_Final, AcumuladorDeRespostas, VariavelDeResultado).
     fazer_perguntas(1, 4, [], ListaDeRespostasFinal),
     writeln('--- Quiz Finalizado! ---'),
-    write('Respostas coletadas em ordem: '),
     writeln(ListaDeRespostasFinal).
+
 
 % Predicado recursivo que executa o quiz.
 % CASO BASE: A recursao para quando o ID atual eh maior que o ID final.
@@ -61,6 +61,26 @@ apresentar_pergunta(ID) :-
     forall(opcao(ID, Letra, TextoOpcao),
            format('~w) ~w~n', [Letra, TextoOpcao])).
 
+% --- Lógica de Cálculo e Exibição de Resultado ---
+
+% Predicado que orquestra a exibição do resultado final.
+exibir_resultado_final(ListaDeRespostas) :-
+    calcula_vencedor(ListaDeRespostas, Vencedor),
+    classe_associada(Vencedor, Classe),
+    descricao_classe(Classe, Descricao),
+    writeln(''), % Adiciona um espaço para legibilidade
+    writeln('------------------------------------------'),
+    writeln('      RESULTADO DO SEU QUIZ:'),
+    writeln('------------------------------------------'),
+    writeln(Descricao).
+
+% Predicado que encontra o item mais frequente (o vencedor) em uma lista.
+calcula_vencedor(Lista, Vencedor) :-
+    msort(Lista, ListaOrdenada), % Ordena a lista para agrupar itens iguais.
+    group_pairs_by_key(ListaOrdenada, Contagem), % Transforma [a,a,b] em [a-[a,a], b-[b]].
+    map_list_to_pairs(length, Contagem, ContagemComprimento), % Conta os itens: [a-2, b-1].
+    keysort(ContagemComprimento, ContagemOrdenadaPorValor), % Ordena pela contagem: [b-1, a-2].
+    last(ContagemOrdenadaPorValor, Vencedor-_). % Pega o último par (o maior) e extrai a chave.        
 
 % --- Base de Conhecimento: Classes e Descrições ---
 % Fatos que associam cada letra de resposta a uma classe principal.
