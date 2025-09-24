@@ -21,7 +21,7 @@ opcao(3, c, 'Paciencia e precisao sempre vencem.').
 opcao(3, d, 'Ninguem me ve chegando ate ser tarde demais.').
 
 pergunta(4, 'Se voce fosse enfrentar um monstro gigantesco, como faria?').
-opcao(4, a, 'Avançaria de peito aberto e atacaria sem medo.').
+opcao(4, a, 'Avancaria de peito aberto e atacaria sem medo.').
 opcao(4, b, 'Lancaria magias poderosas pra controlar ou destruir.').
 opcao(4, c, 'Manteria distancia, analisando o ponto fraco antes de atacar.').
 opcao(4, d, 'Me esgueiraria e atacaria no ponto vital sem ser notado.').
@@ -32,8 +32,7 @@ iniciar_quiz :-
     % O predicado fazer_perguntas/4 eh o coracao do nosso quiz.
     % Formato: fazer_perguntas(ID_Inicial, ID_Final, AcumuladorDeRespostas, VariavelDeResultado).
     fazer_perguntas(1, 4, [], ListaDeRespostasFinal),
-    writeln('--- Quiz Finalizado! ---'),
-    writeln(ListaDeRespostasFinal).
+    exibir_resultado_final(ListaDeRespostasFinal).
 
 
 % Predicado recursivo que executa o quiz.
@@ -76,11 +75,31 @@ exibir_resultado_final(ListaDeRespostas) :-
 
 % Predicado que encontra o item mais frequente (o vencedor) em uma lista.
 calcula_vencedor(Lista, Vencedor) :-
-    msort(Lista, ListaOrdenada), % Ordena a lista para agrupar itens iguais.
-    group_pairs_by_key(ListaOrdenada, Contagem), % Transforma [a,a,b] em [a-[a,a], b-[b]].
-    map_list_to_pairs(length, Contagem, ContagemComprimento), % Conta os itens: [a-2, b-1].
-    keysort(ContagemComprimento, ContagemOrdenadaPorValor), % Ordena pela contagem: [b-1, a-2].
-    last(ContagemOrdenadaPorValor, Vencedor-_). % Pega o último par (o maior) e extrai a chave.        
+    msort(Lista, ListaOrdenada),
+    empacota(ListaOrdenada, Pacotes),
+    maior_pacote(Pacotes, Maior),
+    Maior = [Vencedor|_].
+
+% Agrupa elementos iguais e adjacentes em sub-listas. Ex: [a,a,b] -> [[a,a],[b]]
+empacota([], []).
+empacota([X|Xs], [Grupo|Grupos]) :-
+    separa_iguais(X, Xs, Iguais, Resto),
+    Grupo = [X|Iguais],
+    empacota(Resto, Grupos).
+
+separa_iguais(_, [], [], []).
+separa_iguais(X, [Y|Ys], [], [Y|Ys]) :- X \= Y.
+separa_iguais(X, [X|Xs], [X|Iguais], Resto) :- separa_iguais(X, Xs, Iguais, Resto).
+
+% Encontra a sub-lista (pacote) de maior comprimento.
+maior_pacote([Primeiro|Resto], Maior) :-
+    maior_pacote(Resto, Primeiro, Maior).
+maior_pacote([], Maior, Maior).
+maior_pacote([Pacote|Resto], Acc, Maior) :-
+    length(Pacote, TamPacote),
+    length(Acc, TamAcc),
+    ( TamPacote > TamAcc -> NovoAcc = Pacote ; NovoAcc = Acc ),
+    maior_pacote(Resto, NovoAcc, Maior).        
 
 % --- Base de Conhecimento: Classes e Descrições ---
 % Fatos que associam cada letra de resposta a uma classe principal.
