@@ -1,0 +1,7 @@
+# Arquivos de backup e swap de editores
+*.swp
+*~
+*.bak
+
+# Arquivos compilados do SWI-Prolog (se aplicável)
+*.o
