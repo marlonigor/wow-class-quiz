@@ -46,10 +46,9 @@ fazer_perguntas(ID_Atual, ID_Final, RespostasAcumuladas, ListaDeRespostasFinal) 
 % PASSO RECURSIVO: Executa para cada pergunta.
 fazer_perguntas(ID_Atual, ID_Final, RespostasAcumuladas, ListaDeRespostasFinal) :-
     apresentar_pergunta(ID_Atual),
-    write('Sua resposta: '),
-    read(Resposta),
+    % A linha 'write' foi removida daqui, pois já existe em 'obter_resposta_valida'.
+    obter_resposta_valida(Resposta),
     ProximoID is ID_Atual + 1,
-    % Chama a si mesmo para a proxima pergunta, adicionando a resposta atual na "cabeca" da lista.
     fazer_perguntas(ProximoID, ID_Final, [Resposta | RespostasAcumuladas], ListaDeRespostasFinal).
 
 % Predicado auxiliar que, dado um ID, mostra a pergunta e suas opcoes.
@@ -77,3 +76,20 @@ descricao_classe(guerreiro, 'GUERREIRO: Voce eh destemido e gosta de estar na li
 descricao_classe(mago, 'MAGO: Sua mente eh sua maior arma. Voce prefere usar magias devastadoras e vencer com inteligencia.').
 descricao_classe(cacador, 'CACADOR: Voce eh estrategico e paciente. Prefere lutar a distancia, confiando em precisao e ate em animais companheiros.').
 descricao_classe(ladino, 'LADINO: Voce eh agil, sorrateiro e letal. Prefere vencer com astucia, ataques rapidos e o elemento surpresa.').
+
+% Fatos que definem o que eh uma resposta valida.
+resposta_valida(a).
+resposta_valida(b).
+resposta_valida(c).
+resposta_valida(d).
+
+% Predicado que cria um loop para garantir a obtencao de uma resposta valida.
+obter_resposta_valida(Resposta) :-
+    write('Sua resposta: '),
+    read(Tentativa),
+    (   resposta_valida(Tentativa)
+    ->  Resposta = Tentativa % Se a tentativa eh valida, unifica com Resposta e encerra.
+    ;   writeln(''), % Linha em branco
+        writeln('>> Resposta invalida! Por favor, responda com a, b, c ou d (seguido de ponto).'),
+        obter_resposta_valida(Resposta) % Se for invalida, chama a si mesmo para tentar de novo.
+    ).
